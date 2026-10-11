@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/* Jetons de la charte graphique CFLB */
+@theme {
+  --color-noir: #000000;
+  --color-charcoal: #0e0e0e;
+  --color-ivoire: #f8f5f2;
+  --color-champagne: #efe6d6;
+  --color-or: #d4af37;
+  --color-or-eclat: #ffd700;
+  --color-or-fonce: #8a6d17;
+  --color-muted: rgba(255, 255, 255, 0.7);
+  --color-encre-douce: #4a4339;
+
+  /* Polices Fontshare (licence gratuite, usage commercial autorisé) */
+  --font-display: "Melodrama", "Times New Roman", serif;
+  --font-tech: "Panchang", "Arial Black", sans-serif;
+  --font-ui: "Switzer", "Segoe UI", system-ui, sans-serif;
+  /* Police du grand texte derrière le robot */
+  --font-hero: Georgia, "Times New Roman", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  background: var(--color-ivoire);
+  color: var(--color-charcoal);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+body.is-loading {
+  overflow: hidden;
+}
+
+/* Les ancres tiennent compte de la navbar fixe */
+section[id] {
+  scroll-margin-top: 6rem;
+}
+
+.or-gradient {
+  background: linear-gradient(135deg, #cfaa2e, #eea810);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
