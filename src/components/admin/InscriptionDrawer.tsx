@@ -20,7 +20,7 @@ const EASE = [0.22, 1, 0.36, 1] as const
 function Section({ titre, children }: { titre: string; children: ReactNode }) {
   return (
     <section className="mt-9">
-      <h3 className="flex items-center gap-3 font-tech text-[9px] uppercase tracking-[0.28em] text-or-fonce">
+      <h3 className="flex items-center gap-3 font-label text-[9px] uppercase tracking-[0.28em] text-or-fonce">
         {titre}
         <span aria-hidden className="h-px flex-1 bg-or/25" />
       </h3>
@@ -38,7 +38,7 @@ function LienLigne({ href, icon, label, value, external }: { href: string; icon:
     >
       <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-champagne text-or-fonce">{icon}</span>
       <span className="min-w-0 flex-1">
-        <span className="block font-tech text-[8.5px] uppercase tracking-[0.24em] text-encre-douce">{label}</span>
+        <span className="block font-label text-[8.5px] uppercase tracking-[0.24em] text-encre-douce">{label}</span>
         <span className="mt-0.5 block text-[15px] text-charcoal [overflow-wrap:anywhere]">{value}</span>
       </span>
       <ArrowUpRight size={16} aria-hidden className="shrink-0 text-or-fonce/60 transition group-hover:text-or-fonce" />
@@ -49,7 +49,7 @@ function LienLigne({ href, icon, label, value, external }: { href: string; icon:
 function Fait({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="min-w-0 px-3 py-3 first:pl-0 last:pr-0">
-      <dt className="font-tech text-[8px] uppercase tracking-[0.22em] text-encre-douce">{label}</dt>
+      <dt className="font-label text-[8px] uppercase tracking-[0.22em] text-encre-douce">{label}</dt>
       <dd className="mt-1.5 text-[15px] leading-snug text-charcoal [overflow-wrap:anywhere]">{children}</dd>
     </div>
   )
@@ -133,7 +133,7 @@ export function InscriptionDrawer({ inscription, saving, onClose, onStatut, onUn
       >
         <header data-glass-backdrop className="flex min-h-[4.75rem] items-center justify-between gap-4 border-b border-or/20 px-5 py-4 sm:px-8">
           <div className="min-w-0">
-            <p className="font-tech text-[9px] uppercase tracking-[0.3em] text-or-fonce">Candidature</p>
+            <p className="font-label text-[9px] uppercase tracking-[0.3em] text-or-fonce">Candidature</p>
             <p className="mt-1 truncate text-xs text-encre-douce">Déposée le {formatDateHeure(inscription.created_at)}</p>
           </div>
           <GlassButton shape="circle" size="sm" onClick={onClose} aria-label="Fermer la fiche" className="h-11 w-11">
@@ -201,7 +201,7 @@ export function InscriptionDrawer({ inscription, saving, onClose, onStatut, onUn
                   <blockquote className="whitespace-pre-line text-[15px] leading-relaxed text-charcoal/90 [overflow-wrap:anywhere]">
                     {d.motivation}
                   </blockquote>
-                  <figcaption className="mt-4 text-right font-tech text-[8px] uppercase tracking-[0.22em] text-encre-douce/70">
+                  <figcaption className="mt-4 text-right font-label text-[8px] uppercase tracking-[0.22em] text-encre-douce/70">
                     {d.motivation.length} caractères
                   </figcaption>
                 </>
@@ -349,7 +349,7 @@ function Document({ icon, label, value }: { icon: ReactNode; label: string; valu
     <div className="flex items-center gap-4 rounded-2xl px-4 py-3 ring-1 ring-or/15">
       <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-or/10 text-or-fonce/60">{icon}</span>
       <span className="min-w-0">
-        <span className="block font-tech text-[8.5px] uppercase tracking-[0.24em] text-encre-douce">{label}</span>
+        <span className="block font-label text-[8.5px] uppercase tracking-[0.24em] text-encre-douce">{label}</span>
         <span className="mt-0.5 block text-[15px] text-encre-douce">{value}</span>
       </span>
     </div>

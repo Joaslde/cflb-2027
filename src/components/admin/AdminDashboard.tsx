@@ -172,7 +172,7 @@ export function AdminDashboard({ onLogout, onExpired }: Props) {
         <div className="flex min-w-0 items-center gap-3">
           <img src={logo} alt="" className="h-11 w-11 shrink-0 object-contain" />
           <div className="min-w-0">
-            <p className="font-tech text-[9px] uppercase tracking-[0.3em] text-or-fonce">CFLB 2027</p>
+            <p className="font-label text-[9px] uppercase tracking-[0.3em] text-or-fonce">CFLB 2027</p>
             <p className="truncate font-display text-xl leading-tight">Administration</p>
           </div>
         </div>
@@ -215,7 +215,7 @@ export function AdminDashboard({ onLogout, onExpired }: Props) {
               >
                 <span
                   className={cn(
-                    'flex items-center gap-2 font-tech text-[9px] uppercase tracking-[0.2em]',
+                    'flex items-center gap-2 font-label text-[9px] uppercase tracking-[0.2em]',
                     actif ? 'text-or' : 'text-encre-douce',
                   )}
                 >
@@ -229,11 +229,11 @@ export function AdminDashboard({ onLogout, onExpired }: Props) {
                   {valeur === undefined ? (
                     <Skeleton className={cn('h-10 w-14 rounded-xl', actif && 'bg-white/15')} />
                   ) : (
-                    // Panchang : le zéro de Melodrama est barré et se lit comme un Ø
-                    <span className="font-tech text-4xl leading-none sm:text-5xl">{valeur}</span>
+                    // Supreme : le zéro de Melodrama est barré et se lit comme un Ø
+                    <span className="font-label text-4xl leading-none sm:text-5xl">{valeur}</span>
                   )}
                   {part !== null && (
-                    <span className={cn('pb-1 font-tech text-[9px] tracking-[0.12em]', actif ? 'text-white/55' : 'text-encre-douce/70')}>
+                    <span className={cn('pb-1 font-label text-[9px] tracking-[0.12em]', actif ? 'text-white/55' : 'text-encre-douce/70')}>
                       {part} %
                     </span>
                   )}
@@ -289,7 +289,7 @@ export function AdminDashboard({ onLogout, onExpired }: Props) {
       </section>
 
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-8">
-        <p className="mb-3 flex items-center gap-3 px-1 font-tech text-[9px] uppercase tracking-[0.24em] text-encre-douce" aria-live="polite">
+        <p className="mb-3 flex items-center gap-3 px-1 font-label text-[9px] uppercase tracking-[0.24em] text-encre-douce" aria-live="polite">
           {visibles === null ? 'Chargement…' : `${nombre} candidature${nombre > 1 ? 's' : ''}${q ? ` pour « ${q} »` : ''}`}
           {loading && visibles !== null && <span className="h-1 w-1 animate-ping rounded-full bg-or" aria-hidden />}
         </p>

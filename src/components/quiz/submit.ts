@@ -64,7 +64,7 @@ export async function submitCandidature(d: Draft, f: Files) {
     prenom: d.prenom.trim(),
     date_naissance: d.date_naissance,
     ville: d.ville.trim(),
-    telephone_whatsapp: d.telephone.trim(),
+    telephone_whatsapp: `${d.indicatif} ${d.telephone.replace(/\D/g, '')}`,
     email: d.email.trim().toLowerCase(),
     photo_url: photoPath,
     profession: d.profession.trim(),

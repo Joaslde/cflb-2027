@@ -19,11 +19,29 @@ class HeartCurve extends THREE.Curve<THREE.Vector3> {
 
 const sharedHeartCurve = new HeartCurve()
 
-function ResponsiveGroup({ children, scale = 1 }: { children: ReactNode; scale?: number }) {
+function ResponsiveGroup({ children, scale = 1, compact = false }: { children: ReactNode; scale?: number; compact?: boolean }) {
   const { viewport } = useThree()
-  const s = Math.min(1.1, viewport.width / 3.5) * scale
+  // Mobile et tablette : le robot occupe la hauteur disponible de sa zone
+  const s = (compact ? Math.min(viewport.width / 2.4, viewport.height / 2.3) : Math.min(1.1, viewport.width / 3.5)) * scale
   return <group scale={s}>{children}</group>
 }
+
+/** Vrai sous lg (mobile et tablette). */
+function useCompact() {
+  const query = '(max-width: 1023.98px)'
+  const [compact, setCompact] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches)
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    const onChange = () => setCompact(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return compact
+}
+
+// Bouton du hero sur mobile : verre plus opaque et presque sans reflet,
+// pour que le texte au-dessus ne se reflète pas dedans
+const CTA_MOBILE = { tintOpacity: 0.96, rippleEffect: 0, rimIntensity: 0, edgeIntensity: 0, cornerBoost: 0 }
 
 function GlassCapsule({ color, power, intensity }: { color: string; power: number; intensity: number }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null)
@@ -444,6 +462,7 @@ export function RobotHero({
   metalness = 0.85,
   roughness = 0.38,
 }: RobotHeroProps) {
+  const compact = useCompact()
   return (
     <section
       data-glass-backdrop
@@ -461,15 +480,30 @@ export function RobotHero({
           <h2
             aria-hidden
             className="flex select-none flex-col items-center whitespace-nowrap font-hero font-black text-or-fonce lg:translate-y-[30px]"
-            style={{ opacity: 0.16, letterSpacing: '-0.04em', lineHeight: 0.92 }}
+            style={{ opacity: 0.16, letterSpacing: '-0.04em', lineHeight: 0.9 }}
           >
-            <span style={{ fontSize: 'clamp(2rem, 7.5vw, 8.5rem)' }}>CFLB 2027</span>
-            <span style={{ fontSize: 'clamp(3rem, 13.5vw, 15rem)' }}>ROBOT PITCH</span>
+            {compact ? (
+              // Mobile : les mots s'empilent pour occuper la hauteur derrière le robot
+              <>
+                <span style={{ fontSize: 'min(14vw, 7rem)' }}>CFLB 2027</span>
+                <span style={{ fontSize: 'min(27vw, 13rem)' }}>ROBOT</span>
+                <span style={{ fontSize: 'min(27vw, 13rem)' }}>PITCH</span>
+              </>
+            ) : (
+              <>
+                <span style={{ fontSize: 'clamp(2rem, 7.5vw, 8.5rem)' }}>CFLB 2027</span>
+                <span style={{ fontSize: 'clamp(3rem, 13.5vw, 10rem)' }}>ROBOT PITCH</span>
+              </>
+            )}
           </h2>
         </div>
 
         {/* data-glass-live : le verre des boutons réfracte cette scène en direct */}
-        <div data-glass-live className="absolute inset-0 z-10">
+        {/*
+          Mobile : touch-action pan-y laisse la page défiler verticalement, et les
+          glissements horizontaux du doigt arrivent au robot, qui les suit.
+        */}
+        <div data-glass-live className="absolute inset-0 z-10" style={compact ? { touchAction: 'pan-y' } : undefined}>
           <Canvas
             shadows
             dpr={[1, 2]}
@@ -489,7 +523,7 @@ export function RobotHero({
               <Lightformer form="ring" intensity={2} color="#d4af37" position={[0, 0, -5]} scale={4} />
             </Environment>
 
-            <ResponsiveGroup scale={scale}>
+            <ResponsiveGroup scale={scale} compact={compact}>
               <ContactShadows position={[0, -0.79, 0]} opacity={0.55} scale={15} resolution={1024} blur={2.2} far={2.5} color="#5a4410" />
               <RobotPrototype
                 color={color}
@@ -505,16 +539,16 @@ export function RobotHero({
       </div>
 
       {/* Texte : sous lg, marge basse pour rester au-dessus de la bulle de menu */}
-      <div className="pointer-events-none relative z-20 mx-auto w-full max-w-[1400px] px-5 pb-24 pt-2 sm:px-8 lg:pb-14">
+      <div className="pointer-events-none relative z-20 mx-auto w-full max-w-[1400px] px-5 pb-28 pt-2 sm:px-8 lg:pb-14">
         <div className="flex flex-col items-center gap-4 text-center lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-end lg:gap-8 lg:text-left">
           <div>
-            <p className="font-tech text-[10px] uppercase tracking-[0.3em] text-or-fonce">{eyebrow}</p>
+            <p className="font-label text-[10px] uppercase tracking-[0.3em] text-or-fonce">{eyebrow}</p>
             <h1 className="mx-auto mt-2 max-w-xl font-display text-[2rem] leading-[1.02] text-charcoal sm:text-5xl lg:mx-0 lg:mt-3">
               {title}
             </h1>
           </div>
           <div className="pointer-events-auto order-last lg:order-none">
-            <GlassButton href={ctaHref} variant="or" size="lg">
+            <GlassButton href={ctaHref} variant="or" size="lg" glass={compact ? CTA_MOBILE : undefined}>
               {ctaText}
             </GlassButton>
           </div>

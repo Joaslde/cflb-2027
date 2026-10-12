@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CalendarDays, Crown, House, PenLine, Telescope, type LucideIcon } from 'lucide-react'
+import { Bot, CalendarDays, House, PenLine, Telescope, type LucideIcon } from 'lucide-react'
 import logo from '@/assets/logo-cflb-sm.webp'
 import { GlassButton, invalidateGlass } from '@/components/liquid-glass'
 import { cn } from '@/lib/utils'
@@ -22,9 +22,9 @@ interface Bubble {
 
 const BUBBLES: Bubble[] = [
   { label: 'Accueil', href: '#top', icon: House, x: -140, y: 0, delay: 0.1 },
-  { label: 'CFLB', href: '#la-cflb', icon: Crown, x: -125, y: -65, delay: 0.15 },
-  { label: '2026', href: '#edition-2026', icon: CalendarDays, x: -85, y: -115, delay: 0.2 },
-  { label: 'Vision', href: '#vision-2027', icon: Telescope, x: -30, y: -145, delay: 0.25 },
+  { label: '2026', href: '#edition-2026', icon: CalendarDays, x: -125, y: -65, delay: 0.15 },
+  { label: 'Vision', href: '#vision-2027', icon: Telescope, x: -85, y: -115, delay: 0.2 },
+  { label: 'Pitch', href: '#challenge', icon: Bot, x: -30, y: -145, delay: 0.25 },
   { label: 'Postuler', href: '/postuler', icon: PenLine, x: 33, y: -155, delay: 0.3 },
 ]
 
@@ -53,14 +53,22 @@ export function MobileNav() {
 
   return (
     <div className="lg:hidden">
-      {/* Logo fixe en haut au centre */}
-      <a
-        href="#top"
-        aria-label="Retour en haut de page"
-        className="fixed left-1/2 top-4 z-50 flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-full border border-white/60 bg-white/35 shadow-[0_10px_30px_rgba(90,68,16,0.18)] backdrop-blur-xl"
-      >
-        <img src={logo} alt="CFLB" className="h-[3.25rem] w-[3.25rem] object-contain" />
-      </a>
+      {/* Logo fixe en haut au centre, encadré par l'année : 20 (logo) 27 */}
+      <div className="pointer-events-none fixed inset-x-0 top-3 z-50 flex items-center justify-center gap-3">
+        <span aria-hidden className="w-12 text-right font-hero text-[1.7rem] font-black leading-none tracking-[-0.03em] text-or-fonce">
+          20
+        </span>
+        <a
+          href="#top"
+          aria-label="CFLB 2027, retour en haut de page"
+          className="pointer-events-auto flex h-20 w-20 items-center justify-center rounded-full border border-white/60 bg-white/35 shadow-[0_10px_30px_rgba(90,68,16,0.18)] backdrop-blur-xl"
+        >
+          <img src={logo} alt="CFLB" className="h-[4.1rem] w-[4.1rem] object-contain" />
+        </a>
+        <span aria-hidden className="w-12 font-hero text-[1.7rem] font-black leading-none tracking-[-0.03em] text-or-fonce">
+          27
+        </span>
+      </div>
 
       {open && (
         <div aria-hidden className="fixed inset-0 z-[98] bg-black/30 backdrop-blur-[3px]" onClick={() => setOpen(false)} />

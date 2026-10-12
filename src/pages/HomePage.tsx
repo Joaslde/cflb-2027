@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion'
 import { RobotHero } from '@/components/ui/robot-hero'
 import { SiteNav } from '@/components/SiteNav'
-import { AppelFinal, Edition2026, Footer, LaCflb, Vision2027 } from '@/components/sections'
+import { AppelFinal, Edition2026, Footer, LaCflb, PourQui, PourquoiCandidater, RobotPitch, Vision2027 } from '@/components/sections'
 
 function useViewportHeight() {
   const [vh, setVh] = useState(() => window.innerHeight)
@@ -47,6 +47,9 @@ export function HomePage() {
             <LaCflb />
             <Edition2026 />
             <Vision2027 />
+            <RobotPitch />
+            <PourQui />
+            <PourquoiCandidater />
             <AppelFinal />
             <Footer />
           </div>

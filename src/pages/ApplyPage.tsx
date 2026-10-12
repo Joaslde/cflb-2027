@@ -1,17 +1,19 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ExternalLink, X } from 'lucide-react'
 import logo from '@/assets/logo-cflb-sm.webp'
 import { GlassButton } from '@/components/liquid-glass'
-import { ChoiceCards, Consent, FileDrop, TextArea, TextField } from '@/components/quiz/fields'
+import { ChoiceCards, Consent, FileDrop, PhoneField, TextArea, TextField } from '@/components/quiz/fields'
 import {
   CATEGORIES,
   EMPTY_DRAFT,
+  INDICATIFS,
   MOTIVATION_MAX,
   MOTIVATION_MIN,
   STEPS,
   ageFrom,
   firstInvalid,
+  indicatifDe,
   validate,
   type Draft,
   type Files,
@@ -21,13 +23,23 @@ import { SubmitError, submitCandidature } from '@/components/quiz/submit'
 
 const STORAGE_KEY = 'cflb2027-candidature'
 
+/** Garde les chiffres et espaces, et retire l'indicatif s'il a été collé avec le numéro. */
+function sansIndicatif(valeur: string, indicatif: string) {
+  const v = valeur.replace(/[^\d ]/g, '').trimStart()
+  const code = indicatif.replace('+', '')
+  const { chiffres } = indicatifDe(indicatif)
+  return v.replace(/\s/g, '').length > chiffres && v.startsWith(code) ? v.slice(code.length).trimStart() : v
+}
+
 // Brouillon conservé dans le navigateur (les fichiers ne le sont pas)
 function loadDraft(): { draft: Draft; step: number } | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw)
-    return { draft: { ...EMPTY_DRAFT, ...parsed.draft }, step: Number(parsed.step) || 0 }
+    const draft = { ...EMPTY_DRAFT, ...parsed.draft }
+    draft.telephone = sansIndicatif(String(draft.telephone ?? '').replace(/^\+/, ''), draft.indicatif)
+    return { draft, step: Number(parsed.step) || 0 }
   } catch {
     return null
   }
@@ -141,7 +153,7 @@ export function ApplyPage() {
       <header className="mx-auto flex max-w-3xl items-center justify-between px-5 pt-5 sm:px-8 sm:pt-8">
         <a href="/" className="flex items-center gap-3" aria-label="Retour à l’accueil">
           <img src={logo} alt="" className="h-11 w-11 object-contain" />
-          <span className="hidden font-tech text-[10px] uppercase tracking-[0.25em] text-encre-douce sm:inline">Candidature 2027</span>
+          <span className="hidden font-label text-[10px] uppercase tracking-[0.25em] text-encre-douce sm:inline">Candidature 2027</span>
         </a>
         {phase !== 'fini' && (
           <GlassButton href="/" shape="circle" size="sm" aria-label="Quitter le parcours" className="h-11 w-11">
@@ -160,7 +172,7 @@ export function ApplyPage() {
         <AnimatePresence mode="wait" custom={dir}>
           {phase === 'intro' && (
             <Screen key="intro" dir={1}>
-              <p className="font-tech text-[10px] uppercase tracking-[0.3em] text-or-fonce">CFLB 2027 · Robot Pitch</p>
+              <p className="font-label text-[10px] uppercase tracking-[0.3em] text-or-fonce">CFLB 2027 · Robot Pitch</p>
               <h1 className="mt-5 font-display text-5xl leading-[0.98] sm:text-7xl">Ta candidature commence ici.</h1>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-encre-douce">
                 Une question à la fois, une dizaine en tout. Compte quelques minutes et garde ton CV en PDF à portée de main. Tes
@@ -179,7 +191,7 @@ export function ApplyPage() {
                       setStep(0)
                       setPhase('parcours')
                     }}
-                    className="font-tech text-[10px] uppercase tracking-[0.2em] text-encre-douce underline-offset-4 hover:underline"
+                    className="font-label text-[10px] uppercase tracking-[0.2em] text-encre-douce underline-offset-4 hover:underline"
                   >
                     Recommencer à zéro
                   </button>
@@ -191,7 +203,7 @@ export function ApplyPage() {
           {(phase === 'parcours' || phase === 'envoi') && (
             <Screen key={id} dir={dir}>
               <form onSubmit={next} noValidate>
-                <p className="font-tech text-[10px] uppercase tracking-[0.3em] text-or-fonce">
+                <p className="font-label text-[10px] uppercase tracking-[0.3em] text-or-fonce">
                   {String(step + 1).padStart(2, '0')} / {STEPS.length}
                 </p>
                 {/* Espace insécable avant ? et : (typographie française) */}
@@ -220,7 +232,7 @@ export function ApplyPage() {
                   )}
                   <div className="flex items-center gap-4">
                     {id !== 'motivation' && id !== 'recap' && (
-                      <span className="hidden font-tech text-[9px] uppercase tracking-[0.2em] text-encre-douce/70 sm:inline">
+                      <span className="hidden font-label text-[9px] uppercase tracking-[0.2em] text-encre-douce/70 sm:inline">
                         Entrée ↵
                       </span>
                     )}
@@ -358,14 +370,20 @@ function StepFields({
       )
     case 'telephone':
       return (
-        <TextField
+        <PhoneField
           label="Numéro WhatsApp"
-          type="tel"
-          inputMode="tel"
-          autoFocus
-          autoComplete="tel"
-          value={draft.telephone}
-          onChange={(e) => set('telephone', e.target.value)}
+          indicatif={draft.indicatif}
+          numero={draft.telephone}
+          options={INDICATIFS}
+          onIndicatif={(code) => set('indicatif', code)}
+          onNumero={(v) => set('telephone', sansIndicatif(v, draft.indicatif))}
+          placeholder={draft.indicatif === '+229' ? '0159841185' : undefined}
+          maxLength={18}
+          hint={
+            draft.indicatif === '+229'
+              ? 'Les 10 chiffres après +229. Exemple : 0159841185.'
+              : `${indicatifDe(draft.indicatif).chiffres} chiffres après ${draft.indicatif}.`
+          }
         />
       )
     case 'email':
@@ -434,6 +452,24 @@ function StepFields({
           <Consent checked={draft.consent_exactitude} onChange={(v) => set('consent_exactitude', v)}>
             Je certifie que les informations fournies sont exactes.
           </Consent>
+          {/* Nouvel onglet : le parcours en cours n'est pas perdu */}
+          <p className="mt-3 text-sm leading-relaxed text-encre-douce">
+            Pour savoir ce que nous faisons de tes données, lis notre{' '}
+            <a
+              href="/confidentialite"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-charcoal underline decoration-or decoration-2 underline-offset-4 hover:text-or-fonce"
+            >
+              politique de{' '}
+              <span className="whitespace-nowrap">
+                confidentialité
+                <ExternalLink aria-hidden size={13} strokeWidth={2} className="ml-1 inline-block -translate-y-px align-middle" />
+              </span>
+              <span className="sr-only">(nouvel onglet)</span>
+            </a>
+            .
+          </p>
         </div>
       )
     case 'recap': {
@@ -442,7 +478,7 @@ function StepFields({
         ['Nom', `${draft.prenom} ${draft.nom}`, 'identite'],
         ['Naissance', age !== null ? `${new Date(draft.date_naissance).toLocaleDateString('fr-FR')} (${age} ans)` : '', 'naissance'],
         ['Ville', draft.ville, 'ville'],
-        ['WhatsApp', draft.telephone, 'telephone'],
+        ['WhatsApp', `${draft.indicatif} ${draft.telephone.replace(/\s/g, '')}`, 'telephone'],
         ['Email', draft.email, 'email'],
         ['Activité', draft.structure ? `${draft.profession}, ${draft.structure}` : draft.profession, 'profil'],
         ['Catégorie', draft.categorie, 'categorie'],
@@ -459,7 +495,7 @@ function StepFields({
                 onClick={() => goTo(STEPS.indexOf(target))}
                 className="grid w-full grid-cols-[6.5rem_1fr] gap-4 px-5 py-4 text-left transition-colors hover:bg-white sm:grid-cols-[9rem_1fr]"
               >
-                <span className="font-tech text-[9px] uppercase tracking-[0.2em] text-or-fonce">{label}</span>
+                <span className="font-label text-[9px] uppercase tracking-[0.2em] text-or-fonce">{label}</span>
                 <span className="break-words text-base text-charcoal">{value}</span>
               </button>
             </li>

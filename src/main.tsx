@@ -6,6 +6,7 @@ import { Loader } from '@/components/Loader'
 import { HomePage } from '@/pages/HomePage'
 import { ApplyPage } from '@/pages/ApplyPage'
 import { SecretGate } from '@/pages/SecretGate'
+import { ConfidentialitePage } from '@/pages/ConfidentialitePage'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/postuler" element={<ApplyPage />} />
+        <Route path="/confidentialite" element={<ConfidentialitePage />} />
         <Route path="*" element={<SecretGate />} />
       </Routes>
     </BrowserRouter>

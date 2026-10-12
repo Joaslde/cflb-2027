@@ -16,7 +16,7 @@ export function StatusBadge({ statut, className }: { statut: Statut; className?:
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 font-tech text-[8.5px] font-medium uppercase tracking-[0.16em] ring-1 ring-inset',
+        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 font-label text-[8.5px] font-medium uppercase tracking-[0.16em] ring-1 ring-inset',
         BADGE[statut],
         className,
       )}
@@ -29,7 +29,7 @@ export function StatusBadge({ statut, className }: { statut: Statut; className?:
 
 export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <p className={cn('flex items-center font-tech text-[10px] uppercase tracking-[0.32em] text-or-fonce', className)}>
+    <p className={cn('flex items-center font-label text-[10px] uppercase tracking-[0.32em] text-or-fonce', className)}>
       <span aria-hidden className="mr-3 inline-block h-px w-8 bg-current opacity-50" />
       {children}
     </p>

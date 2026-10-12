@@ -25,7 +25,7 @@ export function InscriptionList({ items, activeId, emptyMessage, searching, onOp
         aria-hidden
         className={cn(
           GRID,
-          'hidden border-b border-or/15 py-3.5 pl-[5.25rem] pr-6 font-tech text-[8.5px] uppercase tracking-[0.24em] text-encre-douce/75',
+          'hidden border-b border-or/15 py-3.5 pl-[5.25rem] pr-6 font-label text-[8.5px] uppercase tracking-[0.24em] text-encre-douce/75',
         )}
       >
         <span>Candidate</span>

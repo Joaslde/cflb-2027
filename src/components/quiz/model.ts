@@ -7,6 +7,7 @@ export interface Draft {
   nom: string
   date_naissance: string
   ville: string
+  indicatif: string
   telephone: string
   email: string
   profession: string
@@ -28,7 +29,8 @@ export const EMPTY_DRAFT: Draft = {
   nom: '',
   date_naissance: '',
   ville: '',
-  telephone: '+229 ',
+  indicatif: '+229',
+  telephone: '',
   email: '',
   profession: '',
   structure: '',
@@ -46,6 +48,27 @@ export const CATEGORIES = [
   { value: 'Professionnelle', description: 'Tu exerces un métier ou tu diriges une équipe.' },
   { value: 'Porteuse de projet', description: 'Tu as une idée ou un projet à impact.' },
 ]
+
+/*
+ * Indicatifs d'Afrique de l'Ouest et nombre de chiffres attendus après l'indicatif.
+ * Bénin : 10 chiffres depuis la réforme de 2024 (ex. 0159841185).
+ */
+export const INDICATIFS = [
+  { code: '+229', pays: 'Bénin', chiffres: 10 },
+  { code: '+228', pays: 'Togo', chiffres: 8 },
+  { code: '+234', pays: 'Nigeria', chiffres: 10 },
+  { code: '+233', pays: 'Ghana', chiffres: 9 },
+  { code: '+225', pays: 'Côte d’Ivoire', chiffres: 10 },
+  { code: '+226', pays: 'Burkina Faso', chiffres: 8 },
+  { code: '+227', pays: 'Niger', chiffres: 8 },
+  { code: '+221', pays: 'Sénégal', chiffres: 9 },
+  { code: '+223', pays: 'Mali', chiffres: 8 },
+  { code: '+224', pays: 'Guinée', chiffres: 9 },
+]
+
+export function indicatifDe(code: string) {
+  return INDICATIFS.find((i) => i.code === code) ?? INDICATIFS[0]
+}
 
 export const MOTIVATION_MIN = 50
 export const MOTIVATION_MAX = 2000
@@ -108,8 +131,12 @@ export function validate(step: StepId, d: Draft, f: Files): string | null {
     case 'ville':
       return d.ville.trim().length < 2 ? 'Indique ta ville.' : null
     case 'telephone': {
-      const digits = d.telephone.replace(/\D/g, '')
-      return digits.length < 8 || digits.length > 15 ? 'Ce numéro WhatsApp ne semble pas complet.' : null
+      // Après l'indicatif : le nombre exact de chiffres du pays (10 pour le Bénin)
+      const { code, pays, chiffres: attendus } = indicatifDe(d.indicatif)
+      const chiffres = d.telephone.replace(/\s/g, '')
+      return /^\d+$/.test(chiffres) && chiffres.length === attendus
+        ? null
+        : `Avec l’indicatif ${code} (${pays}), le numéro doit comporter exactement ${attendus} chiffres.`
     }
     case 'email':
       return EMAIL_RE.test(d.email.trim()) ? null : 'Cette adresse email ne semble pas valide.'

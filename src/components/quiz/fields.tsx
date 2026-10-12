@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type InputHTMLAttributes, type ReactNode } from 'react'
-import { Check, FileText, ImagePlus, X } from 'lucide-react'
+import { Check, ChevronDown, FileText, ImagePlus, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const fieldBase =
@@ -21,10 +21,84 @@ export function TextField({
   }, [autoFocus])
   return (
     <div>
-      <label htmlFor={id} className="font-tech text-[10px] uppercase tracking-[0.25em] text-encre-douce">
+      <label htmlFor={id} className="font-label text-[10px] uppercase tracking-[0.25em] text-encre-douce">
         {label}
       </label>
       <input ref={ref} id={id} className={fieldBase} {...props} />
+      {hint && <p className="mt-2 text-sm text-encre-douce/80">{hint}</p>}
+    </div>
+  )
+}
+
+/**
+ * Numéro de téléphone : indicatif au choix puis numéro.
+ * La liste native reste dessous (pratique sur mobile, accessible), seul son
+ * affichage est remplacé par l'indicatif compact.
+ */
+export function PhoneField({
+  label,
+  indicatif,
+  numero,
+  options,
+  onIndicatif,
+  onNumero,
+  hint,
+  placeholder,
+  maxLength,
+}: {
+  label: string
+  indicatif: string
+  numero: string
+  options: { code: string; pays: string }[]
+  onIndicatif: (code: string) => void
+  onNumero: (valeur: string) => void
+  hint?: string
+  placeholder?: string
+  maxLength?: number
+}) {
+  const id = useId()
+  const ref = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    const t = window.setTimeout(() => ref.current?.focus({ preventScroll: true }), 350)
+    return () => window.clearTimeout(t)
+  }, [])
+  return (
+    <div>
+      <label htmlFor={id} className="font-label text-[10px] uppercase tracking-[0.25em] text-encre-douce">
+        {label}
+      </label>
+      <div className="flex items-end gap-3">
+        <div className="relative shrink-0 border-b-2 border-or/40 transition-colors focus-within:border-or-fonce">
+          <span aria-hidden className="flex items-center gap-1.5 pb-3 pt-2 font-ui text-2xl text-charcoal sm:text-3xl">
+            {indicatif}
+            <ChevronDown size={18} strokeWidth={1.6} className="text-or-fonce" />
+          </span>
+          <select
+            aria-label="Indicatif du pays"
+            value={indicatif}
+            onChange={(e) => onIndicatif(e.target.value)}
+            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          >
+            {options.map((o) => (
+              <option key={o.code} value={o.code}>
+                {o.pays} ({o.code})
+              </option>
+            ))}
+          </select>
+        </div>
+        <input
+          ref={ref}
+          id={id}
+          type="tel"
+          inputMode="numeric"
+          autoComplete="tel-national"
+          placeholder={placeholder}
+          maxLength={maxLength}
+          value={numero}
+          onChange={(e) => onNumero(e.target.value)}
+          className={cn(fieldBase, 'min-w-0 flex-1')}
+        />
+      </div>
       {hint && <p className="mt-2 text-sm text-encre-douce/80">{hint}</p>}
     </div>
   )
@@ -61,7 +135,7 @@ export function TextArea({
         maxLength={max + 200}
         className="w-full resize-none rounded-3xl border border-or/30 bg-white/60 p-5 font-ui text-lg leading-relaxed text-charcoal outline-none backdrop-blur-sm transition-colors placeholder:text-charcoal/30 focus:border-or-fonce sm:text-xl"
       />
-      <div className="mt-3 flex items-center justify-between font-tech text-[10px] uppercase tracking-[0.2em]">
+      <div className="mt-3 flex items-center justify-between font-label text-[10px] uppercase tracking-[0.2em]">
         <span className={n >= min ? 'text-or-fonce' : 'text-encre-douce/70'}>{n >= min ? 'Longueur suffisante' : `${min} caractères minimum`}</span>
         <span className={n > max ? 'text-red-700' : 'text-encre-douce/70'}>
           {n} / {max}
@@ -98,7 +172,7 @@ export function ChoiceCards({
           >
             <span
               className={cn(
-                'mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border font-tech text-[9px] transition-colors',
+                'mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border font-label text-[9px] transition-colors',
                 active ? 'border-or bg-or text-charcoal' : 'border-or/50 text-or-fonce',
               )}
             >

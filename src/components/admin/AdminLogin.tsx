@@ -129,7 +129,7 @@ export function AdminLogin({ notice, onLogin }: { notice: string | null; onLogin
           className="mt-10 rounded-[28px] bg-white/65 p-6 shadow-[0_30px_80px_rgba(90,68,16,0.14)] ring-1 ring-or/25 backdrop-blur-xl sm:p-8"
         >
           <fieldset disabled={busy}>
-            <legend className="mx-auto font-tech text-[10px] uppercase tracking-[0.28em] text-encre-douce">Code d’accès</legend>
+            <legend className="mx-auto font-label text-[10px] uppercase tracking-[0.28em] text-encre-douce">Code d’accès</legend>
             <motion.div animate={secousse} className="mx-auto mt-4 grid max-w-[21rem] grid-cols-5 gap-2 sm:gap-3">
               {cases.map((valeur, i) => (
                 <input
@@ -155,7 +155,7 @@ export function AdminLogin({ notice, onLogin }: { notice: string | null; onLogin
                   onPaste={(e) => onPaste(i, e)}
                   onFocus={(e) => e.target.select()}
                   className={cn(
-                    'h-16 w-full min-w-0 rounded-2xl border bg-ivoire/80 text-center font-tech text-2xl text-charcoal caret-or outline-none transition',
+                    'h-16 w-full min-w-0 rounded-2xl border bg-ivoire/80 text-center font-label text-2xl text-charcoal caret-or outline-none transition',
                     'focus:border-or focus:bg-white focus:ring-4 focus:ring-or/15 disabled:opacity-60',
                     error ? 'border-[#b8483c]/50' : valeur ? 'border-or/60' : 'border-or/30',
                   )}

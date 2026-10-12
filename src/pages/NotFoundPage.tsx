@@ -21,7 +21,7 @@ export function NotFoundPage() {
 
       <div className="relative max-w-xl">
         <img src={logo} alt="Conférence des Femmes Leaders du Bénin" className="mx-auto h-16 w-16 object-contain" />
-        <p className="mt-8 font-tech text-[10px] uppercase tracking-[0.32em] text-or-fonce">Erreur 404</p>
+        <p className="mt-8 font-label text-[10px] uppercase tracking-[0.32em] text-or-fonce">Erreur 404</p>
         <h1 className="mt-5 font-display text-5xl leading-[0.95] sm:text-7xl">Cette page n’existe pas.</h1>
         <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-encre-douce">
           Le lien est peut-être incomplet, ou la page a été déplacée. Retrouve la CFLB 2027 depuis l’accueil.

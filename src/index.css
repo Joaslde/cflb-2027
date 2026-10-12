@@ -14,8 +14,8 @@
 
   /* Polices Fontshare (licence gratuite, usage commercial autorisé) */
   --font-display: "Melodrama", "Times New Roman", serif;
-  --font-tech: "Panchang", "Arial Black", sans-serif;
-  --font-ui: "Switzer", "Segoe UI", system-ui, sans-serif;
+  --font-label: "Supreme", "Helvetica Neue", Arial, sans-serif;
+  --font-ui: "Gambetta", Georgia, "Times New Roman", serif;
   /* Police du grand texte derrière le robot */
   --font-hero: Georgia, "Times New Roman", serif;
 }
@@ -48,5 +48,58 @@ section[id] {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* Bandeau défilant (contenu doublé : -50 % boucle sans saut) */
+@keyframes defilement {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.defilement {
+  animation: defilement 38s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .defilement {
+    animation: none;
+  }
+}
+
+/* Appel final : la vidéo sort de la transparence sur sa gauche (ordinateur) */
+@media (min-width: 768px) {
+  .fondu-gauche {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.45) 30%, #000 65%);
+    mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.45) 30%, #000 65%);
+  }
+}
+
+/* Voile de l'appel final */
+.voile-appel {
+  /* Mobile : voile uniforme, assez couvrant pour que le texte reste prioritaire */
+  background: rgba(226, 194, 90, 0.75);
+}
+
+@media (min-width: 768px) {
+  .voile-appel {
+    /* Ordinateur : dégradé en paliers rapprochés, aucune cassure entre l'or et la vidéo */
+    background: linear-gradient(
+      90deg,
+      #e2c25a 0%,
+      #e2c25a 28%,
+      rgba(226, 194, 90, 0.94) 36%,
+      rgba(226, 194, 90, 0.82) 44%,
+      rgba(226, 194, 90, 0.64) 52%,
+      rgba(226, 194, 90, 0.44) 60%,
+      rgba(226, 194, 90, 0.26) 69%,
+      rgba(226, 194, 90, 0.12) 79%,
+      rgba(226, 194, 90, 0.04) 90%,
+      rgba(226, 194, 90, 0) 100%
+    );
   }
 }

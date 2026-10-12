@@ -45,8 +45,13 @@ const TEXT: Record<Surface, Record<Variant, string>> = {
   sombre: { clair: 'text-white', or: 'text-or-eclat', rouge: 'text-white' },
 }
 
+/** Réglages du verre modifiables au cas par cas (par défaut : PARAMS). */
+export type GlassOverrides = Partial<Omit<typeof PARAMS, 'warp'>>
+
 interface CommonProps {
   children: ReactNode
+  /** Ajuste le verre pour ce bouton seulement (ex. plus opaque). */
+  glass?: GlassOverrides
   variant?: Variant
   /** Couleur du fond sur lequel le bouton est posé (règle la couleur du texte). */
   surface?: Surface
@@ -73,6 +78,7 @@ export function GlassButton(props: AsButton | AsLink) {
     shape = 'pill',
     borderRadius = 16,
     size = 'md',
+    glass,
     className,
     ...rest
   } = props
@@ -80,18 +86,28 @@ export function GlassButton(props: AsButton | AsLink) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [ready, setReady] = useState(false)
   const tint = TINTS[variant]
+  // Clé stable : l'objet glass peut être recréé à chaque rendu
+  const glassKey = JSON.stringify(glass ?? {})
 
   useEffect(() => {
     const element = hostRef.current
     const canvas = canvasRef.current
     if (!element || !canvas) return
-    const params = (): GlassParams => ({ ...PARAMS, shape, borderRadius, tintTop: tint.tintTop, tintBottom: tint.tintBottom })
+    const overrides = JSON.parse(glassKey) as GlassOverrides
+    const params = (): GlassParams => ({
+      ...PARAMS,
+      ...overrides,
+      shape,
+      borderRadius,
+      tintTop: tint.tintTop,
+      tintBottom: tint.tintBottom,
+    })
     return registerGlass({ element, canvas, params, onReady: () => setReady(true), visible: true, ready: false, usesLive: false })
-  }, [shape, borderRadius, tint])
+  }, [shape, borderRadius, tint, glassKey])
 
   const classes = cn(
     'group relative isolate inline-flex select-none items-center justify-center overflow-hidden',
-    'font-tech font-semibold uppercase tracking-[0.18em] whitespace-nowrap',
+    'font-label font-semibold uppercase tracking-[0.18em] whitespace-nowrap',
     'shadow-[0_18px_40px_rgba(60,40,0,0.18)] transition-transform duration-300 ease-out',
     'hover:-translate-y-0.5 hover:scale-[1.03] active:scale-95',
     'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-or',
