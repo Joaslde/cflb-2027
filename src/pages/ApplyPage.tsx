@@ -20,6 +20,7 @@ import {
   type StepId,
 } from '@/components/quiz/model'
 import { SubmitError, submitCandidature } from '@/components/quiz/submit'
+import { usePageMeta } from '@/lib/usePageMeta'
 
 const STORAGE_KEY = 'cflb2027-candidature'
 
@@ -80,6 +81,12 @@ const QUESTIONS: Record<StepId, { titre: string; aide?: string }> = {
 }
 
 export function ApplyPage() {
+  usePageMeta({
+    titre: 'Candidater au Robot-Pitch Challenge 2027 · CFLB',
+    description:
+      'Dépose ta candidature au CFLB Robot-Pitch Challenge 2027 : une question à la fois, quelques minutes, et ton CV en PDF. Présente ton idée innovante devant un jury.',
+    chemin: '/postuler',
+  })
   const saved = useMemo(loadDraft, [])
   const [phase, setPhase] = useState<Phase>('intro')
   const [step, setStep] = useState(saved?.step ?? 0)

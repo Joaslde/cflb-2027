@@ -1,22 +1,158 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/fav.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Référencement : __SITE_URL__ est remplacé à la compilation (voir vite.config.ts) -->
+    <title>CFLB 2027 · Conférence des Femmes Leaders du Bénin</title>
+    <meta
+      name="description"
+      content="3ᵉ édition de la Conférence des Femmes Leaders du Bénin, le 20 mars 2027. Candidatures ouvertes au Robot-Pitch Challenge : présente ton idée devant un jury."
+    />
+    <meta
+      name="keywords"
+      content="CFLB 2027, Conférence des Femmes Leaders du Bénin, Robot-Pitch Challenge, leadership féminin, femmes leaders Bénin, entrepreneuriat féminin, innovation, robotique, pitch, Cotonou, candidature"
+    />
+    <meta name="author" content="Comité d’organisation de la Conférence des Femmes Leaders du Bénin" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="__SITE_URL__/" />
+    <meta name="geo.region" content="BJ" />
+    <meta name="geo.placename" content="Bénin" />
+
+    <!-- Aperçu de partage (WhatsApp, Facebook, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CFLB 2027" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:title" content="CFLB 2027 · Conférence des Femmes Leaders du Bénin" />
+    <meta
+      property="og:description"
+      content="Le 20 mars 2027, la 3ᵉ édition met les femmes d’impact à l’honneur. Candidatures ouvertes au CFLB Robot-Pitch Challenge : ton idée mérite la scène."
+    />
+    <meta property="og:image" content="__SITE_URL__/og-image.jpg" />
+    <meta property="og:image:secure_url" content="__SITE_URL__/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Logo de la Conférence des Femmes Leaders du Bénin" />
+
+    <!-- Aperçu de partage (X / Twitter) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CFLB 2027 · Conférence des Femmes Leaders du Bénin" />
+    <meta
+      name="twitter:description"
+      content="Candidatures ouvertes au CFLB Robot-Pitch Challenge 2027 : présente ton idée innovante devant un jury."
+    />
+    <meta name="twitter:image" content="__SITE_URL__/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Logo de la Conférence des Femmes Leaders du Bénin" />
+
+    <!-- Icônes -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="256x256" href="/fav.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#d4af37" />
-    <meta name="description" content="CFLB 2027 : Conférence des Femmes Leaders du Bénin. Dépose ta candidature." />
+    <meta name="color-scheme" content="light" />
+    <meta name="apple-mobile-web-app-title" content="CFLB 2027" />
+    <meta name="application-name" content="CFLB 2027" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Polices Fontshare : une feuille par police (une adresse groupée ne renvoie que la première) -->
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
     <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
-    <!-- Fontshare : une feuille par police (une adresse groupée ne renvoie que la première) -->
     <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=melodrama@400,500,600,700&display=swap" />
     <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=supreme@400,500,700&display=swap" />
     <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=gambetta@300,400,500,600,300i,400i&display=swap" />
-    <title>CFLB 2027 · Robot Pitch</title>
+
+    <!-- Données structurées : organisation, site et événement -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "__SITE_URL__/#organisation",
+            "name": "Conférence des Femmes Leaders du Bénin",
+            "alternateName": "CFLB",
+            "url": "__SITE_URL__/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "__SITE_URL__/logo-carre.png",
+              "width": 512,
+              "height": 512
+            },
+            "description": "Initiative dédiée à la promotion du leadership, de l’entrepreneuriat, de l’innovation et de l’autonomisation des femmes au Bénin.",
+            "areaServed": { "@type": "Country", "name": "Bénin" },
+            "sameAs": ["https://www.glow-empire-agency.com/conference-femmes-leaders"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "__SITE_URL__/#site",
+            "url": "__SITE_URL__/",
+            "name": "CFLB 2027",
+            "inLanguage": "fr",
+            "publisher": { "@id": "__SITE_URL__/#organisation" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "__SITE_URL__/#page",
+            "url": "__SITE_URL__/",
+            "name": "CFLB 2027 · Conférence des Femmes Leaders du Bénin",
+            "isPartOf": { "@id": "__SITE_URL__/#site" },
+            "about": { "@id": "__SITE_URL__/#evenement" },
+            "primaryImageOfPage": { "@type": "ImageObject", "url": "__SITE_URL__/og-image.jpg" },
+            "inLanguage": "fr"
+          },
+          {
+            "@type": "Event",
+            "@id": "__SITE_URL__/#evenement",
+            "name": "CFLB 2027 : Conférence des Femmes Leaders du Bénin",
+            "alternateName": "CFLB Robot-Pitch Challenge 2027",
+            "description": "3ᵉ édition de la Conférence des Femmes Leaders du Bénin, sur le thème « Femmes d’Impact : Leadership, Innovation et Gouvernance au service du Bénin de demain ». Initiative phare : le CFLB Robot-Pitch Challenge 2027, où les participantes présentent et défendent un projet innovant devant un jury.",
+            "startDate": "2027-03-20",
+            "endDate": "2027-03-20",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "location": {
+              "@type": "Place",
+              "name": "Bénin",
+              "address": { "@type": "PostalAddress", "addressCountry": "BJ" }
+            },
+            "image": ["__SITE_URL__/og-image.jpg", "__SITE_URL__/logo-carre.png"],
+            "organizer": { "@id": "__SITE_URL__/#organisation" },
+            "maximumAttendeeCapacity": 1000,
+            "inLanguage": "fr",
+            "url": "__SITE_URL__/",
+            "keywords": "leadership féminin, innovation, robotique, entrepreneuriat, gouvernance, pitch"
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Contenu lisible sans JavaScript (moteurs et aperçus qui n'exécutent pas le site) -->
+    <noscript>
+      <main style="max-width: 720px; margin: 0 auto; padding: 32px 20px; font-family: Georgia, serif; color: #0e0e0e">
+        <h1>CFLB 2027 · Conférence des Femmes Leaders du Bénin</h1>
+        <p>
+          Le 20 mars 2027, la troisième édition de la Conférence des Femmes Leaders du Bénin réunit 1 000 participants autour
+          du thème « Femmes d’Impact : Leadership, Innovation et Gouvernance au service du Bénin de demain ».
+        </p>
+        <h2>CFLB Robot-Pitch Challenge 2027</h2>
+        <p>
+          Les participantes présentent et défendent un projet ou une idée innovante devant un jury, dans un format court,
+          structuré et convaincant. La robotique et les nouvelles technologies sont à l’honneur.
+        </p>
+        <p><a href="/postuler">Déposer ma candidature</a> · <a href="/confidentialite">Politique de confidentialité</a></p>
+        <p>Ce site nécessite JavaScript pour afficher son contenu complet et le formulaire de candidature.</p>
+      </main>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

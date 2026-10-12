@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react'
 import logo from '@/assets/logo-cflb-sm.webp'
 import { GlassButton } from '@/components/liquid-glass'
+import { usePageMeta } from '@/lib/usePageMeta'
 
 /*
  * Politique de confidentialité du parcours de candidature CFLB 2027.
@@ -49,12 +50,14 @@ function Puce({ children }: { children: ReactNode }) {
 }
 
 export function ConfidentialitePage() {
+  usePageMeta({
+    titre: 'Politique de confidentialité · CFLB 2027',
+    description:
+      'Comment la CFLB collecte, utilise, protège et conserve les données des candidates au Robot-Pitch Challenge 2027, et comment exercer tes droits.',
+    chemin: '/confidentialite',
+  })
   useEffect(() => {
     window.scrollTo({ top: 0 })
-    document.title = 'Politique de confidentialité · CFLB 2027'
-    return () => {
-      document.title = 'CFLB 2027 · Robot Pitch'
-    }
   }, [])
 
   return (
