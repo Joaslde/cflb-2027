@@ -133,11 +133,12 @@ export function Edition2026() {
             </div>
           </FadeUp>
 
-          <FadeUp delay={0.15} className="mt-12 grid max-w-xl grid-cols-3 gap-6 border-t border-white/15 pt-8">
+          {/* Mobile : un chiffre par ligne, libellé à côté. Ordinateur : trois colonnes */}
+          <FadeUp delay={0.15} className="mt-12 grid max-w-xl gap-4 border-t border-white/15 pt-8 sm:grid-cols-3 sm:gap-8">
             {STATS_2026.map((s) => (
-              <div key={s.label}>
-                <p className="font-label text-2xl text-or sm:text-4xl">{s.value}</p>
-                <p className="mt-2 text-xs uppercase tracking-[0.18em] text-white/55">{s.label}</p>
+              <div key={s.label} className="flex items-baseline gap-4 sm:block">
+                <p className="min-w-[5.5rem] font-label text-3xl text-or sm:min-w-0 sm:text-4xl">{s.value}</p>
+                <p className="text-xs uppercase tracking-[0.18em] text-white/55 sm:mt-2">{s.label}</p>
               </div>
             ))}
           </FadeUp>
@@ -240,7 +241,7 @@ export function Vision2027() {
           </FadeUp>
           <FadeUp delay={0.1}>
             <p className="text-lg leading-relaxed text-encre-douce">
-              La troisième édition réunit 1 000 participants autour du leadership féminin, de l’innovation, de
+              La troisième édition réunira 1 000 participants autour du leadership féminin, de l’innovation, de
               l’entrepreneuriat et de la gouvernance. Elle met en lumière le rôle des femmes dans la transformation économique et
               sociale du Bénin, avec une place forte pour la jeunesse, la créativité et les nouvelles technologies.
             </p>
