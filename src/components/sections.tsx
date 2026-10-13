@@ -133,12 +133,16 @@ export function Edition2026() {
             </div>
           </FadeUp>
 
-          {/* Mobile : un chiffre par ligne, libellé à côté. Ordinateur : trois colonnes */}
-          <FadeUp delay={0.15} className="mt-12 grid max-w-xl gap-4 border-t border-white/15 pt-8 sm:grid-cols-3 sm:gap-8">
+          {/*
+            Mobile : un chiffre par ligne, libellé à côté.
+            Plus large : chiffres côte à côte, chacun à sa largeur naturelle ; s'il manque
+            de place, le suivant passe à la ligne (jamais de libellés qui se chevauchent).
+          */}
+          <FadeUp delay={0.15} className="mt-12 flex max-w-xl flex-col gap-4 border-t border-white/15 pt-8 sm:flex-row sm:flex-wrap sm:gap-x-12 sm:gap-y-6">
             {STATS_2026.map((s) => (
               <div key={s.label} className="flex items-baseline gap-4 sm:block">
                 <p className="min-w-[5.5rem] font-label text-3xl text-or sm:min-w-0 sm:text-4xl">{s.value}</p>
-                <p className="text-xs uppercase tracking-[0.18em] text-white/55 sm:mt-2">{s.label}</p>
+                <p className="whitespace-nowrap text-xs uppercase tracking-[0.18em] text-white/55 sm:mt-2">{s.label}</p>
               </div>
             ))}
           </FadeUp>
