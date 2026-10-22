@@ -4,7 +4,7 @@ import type { Draft, Files } from './model'
 export class SubmitError extends Error {
   constructor(
     message: string,
-    readonly kind: 'doublon' | 'reseau' | 'config' | 'inconnu',
+    readonly kind: 'doublon' | 'doublon-tel' | 'limite' | 'reseau' | 'config' | 'inconnu',
   ) {
     super(message)
   }
@@ -39,8 +39,16 @@ async function upload(path: string, body: Blob) {
   if (error) throw new SubmitError('Le fichier n’a pas pu être envoyé. Vérifie ta connexion et réessaie.', 'reseau')
 }
 
+/** Durée minimale d'un vrai parcours : en dessous, c'est un robot. */
+const DUREE_MIN_MS = 20_000
+
+/** Signaux anti-robot relevés par le formulaire. */
+export type Garde = { piege: string; debut: number }
+
 /** Dépose les fichiers puis enregistre la candidature. */
-export async function submitCandidature(d: Draft, f: Files) {
+export async function submitCandidature(d: Draft, f: Files, garde: Garde) {
+  // Robot détecté : on simule un succès sans rien envoyer
+  if (garde.piege || Date.now() - garde.debut < DUREE_MIN_MS) return
   if (!supabase) throw new SubmitError('Le formulaire n’est pas configuré. Contacte l’équipe CFLB.', 'config')
 
   const id = crypto.randomUUID()
@@ -78,6 +86,10 @@ export async function submitCandidature(d: Draft, f: Files) {
   })
 
   if (error) {
+    if (error.code === '23505' && error.message?.includes('telephone')) {
+      throw new SubmitError('Une candidature existe déjà avec ce numéro WhatsApp.', 'doublon-tel')
+    }
+    if (error.code === 'P0429') throw new SubmitError(error.message, 'limite')
     if (error.code === '23505') throw new SubmitError('Une candidature existe déjà avec cette adresse email.', 'doublon')
     if (error.message?.toLowerCase().includes('fetch')) {
       throw new SubmitError('Connexion impossible. Vérifie ta connexion et réessaie.', 'reseau')

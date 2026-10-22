@@ -149,13 +149,15 @@ export function ChoiceCards({
   options,
   value,
   onChange,
+  label = 'Catégorie',
 }: {
   options: { value: string; description: string }[]
   value: string
   onChange: (v: string) => void
+  label?: string
 }) {
   return (
-    <div role="radiogroup" aria-label="Catégorie" className="grid gap-3 sm:grid-cols-2">
+    <div role="radiogroup" aria-label={label} className="grid gap-3 sm:grid-cols-2">
       {options.map((o, i) => {
         const active = value === o.value
         return (

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ExternalLink, X } from 'lucide-react'
 import logo from '@/assets/logo-cflb-sm.webp'
@@ -60,7 +60,16 @@ function clearDraft() {
   }
 }
 
-type Phase = 'intro' | 'parcours' | 'envoi' | 'fini'
+type Phase = 'intro' | 'genre' | 'refus' | 'parcours' | 'envoi' | 'fini'
+
+/** Question préalable (jamais enregistrée) : la compétition est réservée aux femmes. */
+const GENRES = [
+  { value: 'Féminin', description: 'Je suis une femme.' },
+  { value: 'Masculin', description: 'Je suis un homme.' },
+]
+
+/** La question préalable compte comme une étape aux yeux de la candidate. */
+const TOTAL = STEPS.length + 1
 
 const QUESTIONS: Record<StepId, { titre: string; aide?: string }> = {
   identite: { titre: 'Comment t’appelles-tu ?' },
@@ -94,6 +103,10 @@ export function ApplyPage() {
   const [draft, setDraft] = useState<Draft>(saved?.draft ?? EMPTY_DRAFT)
   const [files, setFiles] = useState<Files>({ photo: null, cv: null })
   const [error, setError] = useState<string | null>(null)
+  const [genre, setGenre] = useState('')
+  // Anti-robot : champ piège invisible et heure de début du parcours
+  const [piege, setPiege] = useState('')
+  const debut = useRef(0)
 
   const id = STEPS[step]
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => {
@@ -102,8 +115,20 @@ export function ApplyPage() {
   }
 
   useEffect(() => {
+    if (phase === 'parcours' && !debut.current) debut.current = Date.now()
+  }, [phase])
+
+  useEffect(() => {
     if (phase === 'parcours') saveDraft(draft, step)
   }, [draft, step, phase])
+
+  const validerGenre = (e: FormEvent) => {
+    e.preventDefault()
+    if (!genre) return setError('Choisis une réponse pour continuer.')
+    setError(null)
+    setDir(1)
+    setPhase(genre === 'Féminin' ? 'parcours' : 'refus')
+  }
 
   useEffect(() => {
     window.scrollTo({ top: 0 })
@@ -129,13 +154,14 @@ export function ApplyPage() {
     }
     setPhase('envoi')
     try {
-      await submitCandidature(draft, files)
+      await submitCandidature(draft, files, { piege, debut: debut.current })
       clearDraft()
       setPhase('fini')
     } catch (err) {
       setPhase('parcours')
       const e2 = err instanceof SubmitError ? err : new SubmitError('L’envoi a échoué. Réessaie dans un instant.', 'inconnu')
       if (e2.kind === 'doublon') goTo(STEPS.indexOf('email'))
+      if (e2.kind === 'doublon-tel') goTo(STEPS.indexOf('telephone'))
       setError(e2.message)
     }
   }
@@ -169,8 +195,10 @@ export function ApplyPage() {
         )}
       </header>
 
-      {phase === 'parcours' || phase === 'envoi' ? (
-        <Progress current={step + 1} total={STEPS.length} />
+      {phase === 'genre' ? (
+        <Progress current={1} total={TOTAL} />
+      ) : phase === 'parcours' || phase === 'envoi' ? (
+        <Progress current={step + 2} total={TOTAL} />
       ) : (
         <div className="h-[3px]" />
       )}
@@ -186,7 +214,7 @@ export function ApplyPage() {
                 réponses sont gardées sur cet appareil si tu fais une pause.
               </p>
               <div className="mt-10 flex flex-wrap items-center gap-4">
-                <GlassButton variant="or" size="lg" onClick={() => setPhase('parcours')}>
+                <GlassButton variant="or" size="lg" onClick={() => setPhase('genre')}>
                   {saved && saved.step > 0 ? 'Reprendre' : 'Commencer'}
                 </GlassButton>
                 {saved && saved.step > 0 && (
@@ -196,7 +224,7 @@ export function ApplyPage() {
                       clearDraft()
                       setDraft(EMPTY_DRAFT)
                       setStep(0)
-                      setPhase('parcours')
+                      setPhase('genre')
                     }}
                     className="font-label text-[10px] uppercase tracking-[0.2em] text-encre-douce underline-offset-4 hover:underline"
                   >
@@ -207,11 +235,72 @@ export function ApplyPage() {
             </Screen>
           )}
 
+          {phase === 'genre' && (
+            <Screen key="genre" dir={1}>
+              <form onSubmit={validerGenre} noValidate>
+                <p className="font-label text-[10px] uppercase tracking-[0.3em] text-or-fonce">01 / {TOTAL}</p>
+                <h1 className="mt-4 font-display text-4xl leading-[1.02] sm:text-6xl">Pour commencer, tu es…</h1>
+                <div className="mt-10">
+                  <ChoiceCards
+                    label="Genre"
+                    options={GENRES}
+                    value={genre}
+                    onChange={(v) => {
+                      setGenre(v)
+                      setError(null)
+                    }}
+                  />
+                </div>
+                <p role="alert" aria-live="polite" className="mt-5 min-h-[1.5rem] text-sm font-medium text-red-700">
+                  {error}
+                </p>
+                <div className="mt-6 flex justify-end">
+                  <GlassButton type="submit" variant="or" size="md">
+                    <span className="flex items-center gap-2">
+                      Continuer <ArrowRight size={14} />
+                    </span>
+                  </GlassButton>
+                </div>
+              </form>
+            </Screen>
+          )}
+
+          {phase === 'refus' && (
+            <Screen key="refus" dir={1}>
+              <p className="font-label text-[10px] uppercase tracking-[0.3em] text-or-fonce">Merci de ton intérêt</p>
+              <h1 className="mt-5 font-display text-5xl leading-[0.98] sm:text-7xl">Ce défi est réservé aux femmes.</h1>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-encre-douce">
+                Le CFLB Robot-Pitch Challenge 2027 est exclusivement ouvert aux femmes. Sa mission : donner plus de place aux
+                femmes dans la technologie, l’innovation et l’entrepreneuriat au Bénin.
+              </p>
+              <p className="mt-4 max-w-xl text-lg leading-relaxed text-encre-douce">
+                Tu peux quand même nous aider : parle de la compétition à une sœur, une amie, une collègue ou une camarade
+                capable de relever le défi, et invite-la à déposer sa candidature.
+              </p>
+              <div className="mt-10">
+                <GlassButton href="/" variant="or" size="lg">
+                  Retour à l’accueil
+                </GlassButton>
+              </div>
+            </Screen>
+          )}
+
           {(phase === 'parcours' || phase === 'envoi') && (
             <Screen key={id} dir={dir}>
               <form onSubmit={next} noValidate>
+                {/* Champ piège : invisible pour les humains, rempli par les robots */}
+                <input
+                  type="text"
+                  name="site_web"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden
+                  value={piege}
+                  onChange={(e) => setPiege(e.target.value)}
+                  className="absolute -left-[9999px] h-px w-px opacity-0"
+                />
                 <p className="font-label text-[10px] uppercase tracking-[0.3em] text-or-fonce">
-                  {String(step + 1).padStart(2, '0')} / {STEPS.length}
+                  {String(step + 2).padStart(2, '0')} / {TOTAL}
                 </p>
                 {/* Espace insécable avant ? et : (typographie française) */}
                 <h1 className="mt-4 font-display text-4xl leading-[1.02] sm:text-6xl">

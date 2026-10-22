@@ -143,3 +143,53 @@ create policy "inscription_cflb_2027_fichiers_admin"
 -- update auth.users
 --   set raw_app_meta_data = raw_app_meta_data || '{"cflb_admin": true}'
 --   where email = '<email admin>';
+
+-- Anti-abus : un numéro WhatsApp par candidature, et limite d'envois par connexion
+create unique index if not exists inscription_cflb_2027_telephone_unique
+  on public.inscription_cflb_2027 (telephone_whatsapp);
+
+create table if not exists public.inscription_cflb_2027_envois (
+  id bigint generated always as identity primary key,
+  ip text not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists inscription_cflb_2027_envois_ip_date
+  on public.inscription_cflb_2027_envois (ip, created_at);
+alter table public.inscription_cflb_2027_envois enable row level security;
+revoke all on public.inscription_cflb_2027_envois from anon, authenticated;
+
+-- 3 candidatures par heure et par IP, 20 par minute au total
+create or replace function public.inscription_cflb_2027_limite()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_headers json := nullif(current_setting('request.headers', true), '')::json;
+  v_ip text := coalesce(
+    nullif(split_part(coalesce(v_headers->>'x-forwarded-for', ''), ',', 1), ''),
+    v_headers->>'cf-connecting-ip',
+    'inconnue');
+begin
+  if (select count(*) from public.inscription_cflb_2027_envois
+      where ip = v_ip and created_at > now() - interval '1 hour') >= 3 then
+    raise exception 'Trop de candidatures depuis cette connexion, réessaie plus tard.'
+      using errcode = 'P0429';
+  end if;
+  if (select count(*) from public.inscription_cflb_2027_envois
+      where created_at > now() - interval '1 minute') >= 20 then
+    raise exception 'Trop de candidatures en ce moment, réessaie dans une minute.'
+      using errcode = 'P0429';
+  end if;
+  insert into public.inscription_cflb_2027_envois (ip) values (v_ip);
+  delete from public.inscription_cflb_2027_envois where created_at < now() - interval '1 day';
+  return new;
+end;
+$$;
+revoke execute on function public.inscription_cflb_2027_limite() from public, anon, authenticated;
+
+drop trigger if exists inscription_cflb_2027_limite on public.inscription_cflb_2027;
+create trigger inscription_cflb_2027_limite
+  before insert on public.inscription_cflb_2027
+  for each row execute function public.inscription_cflb_2027_limite();
