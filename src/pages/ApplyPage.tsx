@@ -183,7 +183,7 @@ export function ApplyPage() {
         </p>
       </div>
 
-      <header className="mx-auto flex max-w-3xl items-center justify-between px-5 pt-5 sm:px-8 sm:pt-8">
+      <header className="mx-auto flex max-w-3xl items-center justify-between px-5 pt-3 sm:px-8 sm:pt-8">
         <a href="/" className="flex items-center gap-3" aria-label="Retour à l’accueil">
           <img src={logo} alt="" className="h-11 w-11 object-contain" />
           <span className="hidden font-label text-[10px] uppercase tracking-[0.25em] text-encre-douce sm:inline">Candidature 2027</span>
@@ -203,17 +203,27 @@ export function ApplyPage() {
         <div className="h-[3px]" />
       )}
 
-      <main className="mx-auto max-w-3xl px-5 pb-16 pt-10 sm:px-8 sm:pt-16">
+      <main className="mx-auto max-w-3xl px-5 pb-16 pt-4 sm:px-8 sm:pt-8">
         <AnimatePresence mode="wait" custom={dir}>
           {phase === 'intro' && (
             <Screen key="intro" dir={1}>
               <p className="font-label text-[10px] uppercase tracking-[0.3em] text-or-fonce">CFLB 2027 · Robot Pitch</p>
-              <h1 className="mt-5 font-display text-5xl leading-[0.98] sm:text-7xl">Ta candidature commence ici.</h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-encre-douce">
+              {/* Écran compact : le bouton doit tenir dans la première vue, sur mobile comme sur ordinateur */}
+              <h1 className="mt-3 font-display text-[2.5rem] leading-[0.98] sm:text-[4.25rem]">Ta candidature commence ici.</h1>
+              <p className="mt-3 max-w-xl text-base leading-normal text-encre-douce sm:text-lg sm:leading-relaxed">
                 Une question à la fois, une dizaine en tout. Compte quelques minutes et garde ton CV en PDF à portée de main. Tes
                 réponses sont gardées sur cet appareil si tu fais une pause.
               </p>
-              <div className="mt-10 flex flex-wrap items-center gap-4">
+              {/* Rappelé avant de commencer pour que personne ne découvre l'exigence après coup */}
+              <div className="mt-4 max-w-xl rounded-3xl border border-or bg-white/70 px-4 py-3.5 sm:px-6 sm:py-5">
+                <p className="font-label text-[10px] uppercase tracking-[0.25em] text-or-fonce">À savoir avant de candidater</p>
+                <p className="mt-1.5 text-base leading-normal text-charcoal sm:leading-relaxed">
+                  Le jour du challenge, tu devras présenter au jury{' '}
+                  <strong>un prototype fonctionnel, un prototype en cours ou, au minimum, le schéma de ton prototype</strong>.
+                  Une idée seule ne suffit pas.
+                </p>
+              </div>
+              <div className="mt-5 flex flex-wrap items-center gap-4">
                 <GlassButton variant="or" size="lg" onClick={() => setPhase('genre')}>
                   {saved && saved.step > 0 ? 'Reprendre' : 'Commencer'}
                 </GlassButton>
@@ -539,6 +549,10 @@ function StepFields({
     case 'engagements':
       return (
         <div className="grid gap-3">
+          <Consent checked={draft.consent_prototype} onChange={(v) => set('consent_prototype', v)}>
+            J’ai bien compris que, le jour du challenge, je devrai présenter au jury{' '}
+            <strong>un prototype fonctionnel, un prototype en cours ou, au minimum, le schéma de mon prototype</strong>.
+          </Consent>
           <Consent checked={draft.consent_image} onChange={(v) => set('consent_image', v)}>
             J’autorise la CFLB à utiliser mon image (photo et vidéo) dans le cadre de l’événement et de sa communication.
           </Consent>

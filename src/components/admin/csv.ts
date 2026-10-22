@@ -49,6 +49,7 @@ const COLONNES: [string, (r: Inscription, aujourdhui: string) => string][] = [
   ['Catégorie', (r) => cell(r.categorie)],
   ['Motivation', (r) => cell(r.motivation)],
   ['Photo fournie', (r) => cell(ouiNon(Boolean(r.photo_url)))],
+  ['Engagement prototype', (r) => cell(ouiNon(r.consent_prototype))],
   ['Droit à l’image', (r) => cell(ouiNon(r.consent_image))],
   ['Règlement accepté', (r) => cell(ouiNon(r.consent_reglement))],
   ['Exactitude certifiée', (r) => cell(ouiNon(r.consent_exactitude))],

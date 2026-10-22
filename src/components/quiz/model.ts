@@ -14,6 +14,7 @@ export interface Draft {
   structure: string
   categorie: string
   motivation: string
+  consent_prototype: boolean
   consent_image: boolean
   consent_reglement: boolean
   consent_exactitude: boolean
@@ -36,6 +37,7 @@ export const EMPTY_DRAFT: Draft = {
   structure: '',
   categorie: '',
   motivation: '',
+  consent_prototype: false,
   consent_image: false,
   consent_reglement: false,
   consent_exactitude: false,
@@ -156,7 +158,9 @@ export function validate(step: StepId, d: Draft, f: Files): string | null {
       if (!f.cv) return 'Ajoute ton CV au format PDF.'
       return f.cv.size > FILE_MAX_BYTES ? 'Le CV dépasse 5 Mo.' : null
     case 'engagements':
-      return d.consent_image && d.consent_reglement && d.consent_exactitude ? null : 'Les trois engagements sont nécessaires.'
+      return d.consent_prototype && d.consent_image && d.consent_reglement && d.consent_exactitude
+        ? null
+        : 'Les quatre engagements sont nécessaires.'
     case 'recap':
       return null
   }

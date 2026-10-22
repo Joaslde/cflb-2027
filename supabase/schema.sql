@@ -193,3 +193,10 @@ drop trigger if exists inscription_cflb_2027_limite on public.inscription_cflb_2
 create trigger inscription_cflb_2027_limite
   before insert on public.inscription_cflb_2027
   for each row execute function public.inscription_cflb_2027_limite();
+
+-- Engagement prototype : la candidate confirme savoir ce qu'elle doit présenter au jury.
+-- Valeur par défaut false pour les dossiers déposés avant l'ajout de la case.
+alter table public.inscription_cflb_2027
+  add column if not exists consent_prototype boolean not null default false;
+comment on column public.inscription_cflb_2027.consent_prototype is
+  'La candidate a confirmé savoir qu''elle doit présenter au jury un prototype fonctionnel, un prototype en cours ou au minimum son schéma.';

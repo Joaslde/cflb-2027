@@ -80,6 +80,7 @@ export async function submitCandidature(d: Draft, f: Files, garde: Garde) {
     categorie: d.categorie,
     motivation: d.motivation.trim(),
     cv_url: cvPath,
+    consent_prototype: d.consent_prototype,
     consent_image: d.consent_image,
     consent_reglement: d.consent_reglement,
     consent_exactitude: d.consent_exactitude,

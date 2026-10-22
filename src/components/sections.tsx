@@ -303,7 +303,23 @@ const ETAPES_CHALLENGE = [
       'Un projet ou une idée innovante, porteuse d’une solution concrète. La robotique et les nouvelles technologies sont à l’honneur.',
   },
   { titre: 'Un pitch', texte: 'Une présentation courte, structurée et convaincante de ton projet.' },
-  { titre: 'Un jury', texte: 'Tu présentes et tu défends ton idée devant un jury.' },
+  { titre: 'Un jury', texte: 'Tu présentes ton prototype, ou son schéma, et tu défends ton idée devant un jury.' },
+]
+
+/* Ce que la candidate apporte devant le jury : au minimum un schéma, au mieux un prototype qui fonctionne */
+const LIVRABLES = [
+  {
+    titre: 'Un prototype fonctionnel',
+    texte: 'Ton projet existe et fonctionne : tu le montres en action au jury.',
+  },
+  {
+    titre: 'Un prototype en cours',
+    texte: 'Une partie fonctionne déjà : tu montres où tu en es et ce qu’il reste à construire.',
+  },
+  {
+    titre: 'Le schéma du prototype',
+    texte: 'Un plan, un croquis ou une maquette qui explique clairement comment ton projet fonctionnera.',
+  },
 ]
 
 const COMPETENCES = ['Prise de parole', 'Esprit critique', 'Créativité', 'Défendre ses idées']
@@ -337,6 +353,35 @@ export function RobotPitch() {
             </li>
           ))}
         </ol>
+
+        {/* Ce qu'on attend concrètement le jour J */}
+        <div id="ce-que-tu-presentes" className="mt-16 rounded-[2rem] bg-charcoal p-8 text-ivoire sm:p-12">
+          <FadeUp>
+            <p className="font-label text-[10px] uppercase tracking-[0.25em] text-or">Obligatoire · Le jour du challenge</p>
+            <h3 className="mt-5 max-w-3xl font-display text-4xl leading-tight sm:text-5xl">
+              Tu viens avec quelque chose de concret à montrer.
+            </h3>
+            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ivoire/80">
+              Une idée seule ne suffit pas : tu soumets au jury l’objet de ton projet. Il n’a pas besoin d’être terminé. Tu
+              présentes l’une de ces trois formes, et c’est ta capacité à la porter qui doit te donner envie de candidater.
+            </p>
+          </FadeUp>
+          <ul className="mt-10 grid gap-4 md:grid-cols-3">
+            {LIVRABLES.map((l, i) => (
+              <li key={l.titre} className="rounded-2xl border border-or/40 bg-white/5 p-6">
+                <FadeUp delay={i * 0.08}>
+                  <p className="font-display text-2xl text-or">{l.titre}</p>
+                  <p className="mt-3 leading-relaxed text-ivoire/80">{l.texte}</p>
+                </FadeUp>
+              </li>
+            ))}
+          </ul>
+          <FadeUp>
+            <p className="mt-8 text-base leading-relaxed text-ivoire">
+              <span className="font-semibold text-or">Le minimum demandé :</span> un schéma clair de ton prototype.
+            </p>
+          </FadeUp>
+        </div>
 
         <div className="mt-16 grid gap-12 lg:grid-cols-2">
           <FadeUp>
@@ -533,7 +578,7 @@ export function AppelFinal() {
             Ton idée mérite la scène.
           </h2>
           <p className="mt-8 max-w-lg text-lg leading-relaxed text-charcoal/80">
-            Les candidatures au CFLB Robot-Pitch Challenge 2027 sont ouvertes. Quelques questions, une à une : qui tu es, ton parcours, et pourquoi tu veux relever le défi.
+            Les candidatures au CFLB Robot-Pitch Challenge 2027 sont ouvertes. Quelques questions, une à une : qui tu es, ton parcours, et pourquoi tu veux relever le défi. Le jour J, tu présenteras au jury ton prototype ou, au minimum, son schéma.
           </p>
           <div className="mt-12">
             <GlassButton href="/postuler" variant="clair" size="lg">

@@ -37,6 +37,7 @@ export interface Inscription {
   categorie: string
   motivation: string
   cv_url: string
+  consent_prototype: boolean
   consent_image: boolean
   consent_reglement: boolean
   consent_exactitude: boolean
@@ -45,7 +46,7 @@ export interface Inscription {
   reviewed_at: string | null
 }
 
-export type InscriptionResume = Omit<Inscription, 'consent_image' | 'consent_reglement' | 'consent_exactitude'> & {
+export type InscriptionResume = Omit<Inscription, 'consent_prototype' | 'consent_image' | 'consent_reglement' | 'consent_exactitude'> & {
   motivation_extrait: string
 }
 

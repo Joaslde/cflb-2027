@@ -249,6 +249,7 @@ export function InscriptionDrawer({ inscription, saving, onClose, onStatut, onUn
           <Section titre="Engagements">
             <ul className="space-y-2 text-sm text-charcoal/85">
               {[
+                ['Sait ce qu’elle doit présenter au jury', d?.consent_prototype],
                 ['Droit à l’image accordé', d?.consent_image],
                 ['Règlement accepté', d?.consent_reglement],
                 ['Informations certifiées exactes', d?.consent_exactitude],
